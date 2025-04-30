@@ -1,248 +1,142 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Formulario de Registro de Paciente y Solicitud de Medicamento</title>
-</head>
-<body>
-    <h1>Formulario de Registro de Paciente</h1>
-    <form id="patientForm">
-        <label for="name">Nombre:</label>
-        <input type="text" id="name" required><br>
+// app.js
+document.getElementById('patientForm').addEventListener('submit', function(event) {
+    event.preventDefault();
 
-        <label for="familyName">Apellido:</label>
-        <input type="text" id="familyName" required><br>
+    // Obtener los valores del formulario
+    const name = document.getElementById('name').value;
+    const familyName = document.getElementById('familyName').value;
+    const gender = document.getElementById('gender').value;
+    const birthDate = document.getElementById('birthDate').value;
+    const identifierSystem = document.getElementById('identifierSystem').value;
+    const identifierValue = document.getElementById('identifierValue').value;
+    const cellPhone = document.getElementById('cellPhone').value;
+    const email = document.getElementById('email').value;
+    const address = document.getElementById('address').value;
+    const city = document.getElementById('city').value;
+    const postalCode = document.getElementById('postalCode').value;
 
-        <label for="gender">Género:</label>
-        <select id="gender" required>
-            <option value="male">Masculino</option>
-            <option value="female">Femenino</option>
-            <option value="other">Otro</option>
-        </select><br>
+    // Medicamento
+    const nameMedicine = document.getElementById('nameMedicine').value;
+    const presentation = document.getElementById('presentation').value;
+    const dose = document.getElementById('dose').value;
+    const amount = document.getElementById('amount').value;
+    const diagnosis = document.getElementById('disgnosis').value;
+    const applicationDate = document.getElementById('applicationDate').value;
 
-        <label for="birthDate">Fecha de Nacimiento:</label>
-        <input type="date" id="birthDate" required><br>
+    // Datos prescripción
+    const doctorName = document.getElementById('doctorName').value;
+    const recipeDate = document.getElementById('recipeDate').value;
+    const institution = document.getElementById('institution').value;
 
-        <label for="identifierSystem">Sistema Identificador:</label>
-        <input type="text" id="identifierSystem" required><br>
+    // Observaciones
+    const observations = document.getElementById('observations').value;
 
-        <label for="identifierValue">Valor Identificador:</label>
-        <input type="text" id="identifierValue" required><br>
+    // Crear objeto Patient
+    const patient = {
+        resourceType: "Patient",
+        name: [{
+            use: "official",
+            given: [name],
+            family: familyName
+        }],
+        gender: gender,
+        birthDate: birthDate,
+        identifier: [{
+            system: identifierSystem,
+            value: identifierValue
+        }],
+        telecom: [{
+            system: "phone",
+            value: cellPhone,
+            use: "home"
+        }, {
+            system: "email",
+            value: email,
+            use: "home"
+        }],
+        address: [{
+            use: "home",
+            line: [address],
+            city: city,
+            postalCode: postalCode,
+            country: "Colombia"
+        }]
+    };
 
-        <label for="cellPhone">Teléfono:</label>
-        <input type="text" id="cellPhone" required><br>
+    // Crear paciente y luego registrar la solicitud de medicamento
+    fetch('https://backend3-ohrj.onrender.com', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(patient)
+    })
+    .then(response => response.json())
+    .then(data => {
+        alert('✅ Paciente creado exitosamente');
 
-        <label for="email">Correo Electrónico:</label>
-        <input type="email" id="email" required><br>
+        const patientId = data.id;
 
-        <label for="address">Dirección:</label>
-        <input type="text" id="address" required><br>
-
-        <label for="city">Ciudad:</label>
-        <input type="text" id="city" required><br>
-
-        <label for="postalCode">Código Postal:</label>
-        <input type="text" id="postalCode" required><br>
-
-        <h2>Medicamento</h2>
-        <label for="nameMedicine">Nombre del Medicamento:</label>
-        <input type="text" id="nameMedicine" required><br>
-
-        <label for="presentation">Presentación:</label>
-        <input type="text" id="presentation" required><br>
-
-        <label for="dose">Dosis:</label>
-        <input type="text" id="dose" required><br>
-
-        <label for="amount">Cantidad:</label>
-        <input type="number" id="amount" required><br>
-
-        <label for="disgnosis">Diagnóstico:</label>
-        <input type="text" id="disgnosis" required><br>
-
-        <label for="applicationDate">Fecha de Aplicación:</label>
-        <input type="date" id="applicationDate" required><br>
-
-        <h2>Datos de la Prescripción</h2>
-        <label for="doctorName">Nombre del Médico:</label>
-        <input type="text" id="doctorName" required><br>
-
-        <label for="recipeDate">Fecha de Receta:</label>
-        <input type="date" id="recipeDate" required><br>
-
-        <label for="institution">Institución:</label>
-        <input type="text" id="institution" required><br>
-
-        <label for="observations">Observaciones:</label>
-        <textarea id="observations"></textarea><br>
-
-        <button type="submit">Registrar Paciente y Solicitar Medicamento</button>
-    </form>
-
-    <h2>Consultar Historia Médica</h2>
-    <button onclick="obtenerHistoriaMedica()">Consultar Historia Médica</button>
-    <pre id="historia-medica"></pre>
-
-    <script>
-        document.getElementById('patientForm').addEventListener('submit', function(event) {
-            event.preventDefault();
-
-            // Obtener los valores del formulario
-            const name = document.getElementById('name').value;
-            const familyName = document.getElementById('familyName').value;
-            const gender = document.getElementById('gender').value;
-            const birthDate = document.getElementById('birthDate').value;
-            const identifierSystem = document.getElementById('identifierSystem').value;
-            const identifierValue = document.getElementById('identifierValue').value;
-            const cellPhone = document.getElementById('cellPhone').value;
-            const email = document.getElementById('email').value;
-            const address = document.getElementById('address').value;
-            const city = document.getElementById('city').value;
-            const postalCode = document.getElementById('postalCode').value;
-
-            // Medicamento
-            const nameMedicine = document.getElementById('nameMedicine').value;
-            const presentation = document.getElementById('presentation').value;
-            const dose = document.getElementById('dose').value;
-            const amount = document.getElementById('amount').value;
-            const diagnosis = document.getElementById('disgnosis').value;
-            const applicationDate = document.getElementById('applicationDate').value;
-
-            // Datos prescripción
-            const doctorName = document.getElementById('doctorName').value;
-            const recipeDate = document.getElementById('recipeDate').value;
-            const institution = document.getElementById('institution').value;
-
-            // Observaciones
-            const observations = document.getElementById('observations').value;
-
-            // Crear objeto Patient
-            const patient = {
-                resourceType: "Patient",
-                name: [{
-                    use: "official",
-                    given: [name],
-                    family: familyName
-                }],
-                gender: gender,
-                birthDate: birthDate,
-                identifier: [{
-                    system: identifierSystem,
-                    value: identifierValue
-                }],
-                telecom: [{
-                    system: "phone",
-                    value: cellPhone,
-                    use: "home"
-                }, {
-                    system: "email",
-                    value: email,
-                    use: "home"
-                }],
-                address: [{
-                    use: "home",
-                    line: [address],
-                    city: city,
-                    postalCode: postalCode,
-                    country: "Colombia"
+        // Crear MedicationRequest usando el ID del paciente
+        const medicationRequest = {
+            resourceType: "MedicationRequest",
+            status: "active",
+            intent: "order",
+            medicationCodeableConcept: {
+                text: nameMedicine,
+                coding: [{
+                    display: `${nameMedicine} - ${presentation}`
                 }]
-            };
+            },
+            subject: {
+                reference: `Patient/${patientId}`,
+                display: `${name} ${familyName}`
+            },
+            requester: {
+                reference: `Practitioner/${doctorName.replace(/\s+/g, '-')}`,
+                display: doctorName
+            },
+            supportingInformation: [{
+                reference: `Organization/${institution.replace(/\s+/g, '-')}`,
+                display: institution
+            }],
+            authoredOn: recipeDate,
+            dosageInstruction: [{
+                text: dose,
+                timing: {
+                    event: [applicationDate]
+                }
+            }],
+            quantity: {
+                value: parseInt(amount),
+                unit: "Unidades"
+            },
+            reasonCode: [{
+                text: diagnosis
+            }],
+            note: [{
+                text: observations || "Sin observaciones adicionales"
+            }],
+            substitution: {
+                allowedBoolean: false
+            }
+        };
 
-            // Crear paciente y luego registrar la solicitud de medicamento
-            fetch('https://backend2-m79x.onrender.com/pacientes', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(patient)
-            })
-            .then(response => response.json())
-            .then(data => {
-                alert('✅ Paciente creado exitosamente');
-
-                const patientId = data.id;
-
-                // Crear MedicationRequest usando el ID del paciente
-                const medicationRequest = {
-                    resourceType: "MedicationRequest",
-                    status: "active",
-                    intent: "order",
-                    medicationCodeableConcept: {
-                        text: nameMedicine,
-                        coding: [{
-                            display: `${nameMedicine} - ${presentation}`
-                        }]
-                    },
-                    subject: {
-                        reference: `Patient/${patientId}`,
-                        display: `${name} ${familyName}`
-                    },
-                    requester: {
-                        reference: `Practitioner/${doctorName.replace(/\s+/g, '-')}`,
-                        display: doctorName
-                    },
-                    supportingInformation: [{
-                        reference: `Organization/${institution.replace(/\s+/g, '-')}`,
-                        display: institution
-                    }],
-                    authoredOn: recipeDate,
-                    dosageInstruction: [{
-                        text: dose,
-                        timing: {
-                            event: [applicationDate]
-                        }
-                    }],
-                    quantity: {
-                        value: parseInt(amount),
-                        unit: "Unidades"
-                    },
-                    reasonCode: [{
-                        text: diagnosis
-                    }],
-                    note: [{
-                        text: observations || "Sin observaciones adicionales"
-                    }],
-                    substitution: {
-                        allowedBoolean: false
-                    }
-                };
-
-                return fetch('https://backend2-m79x.onrender.com/medicationRequest', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(medicationRequest)
-                });
-            })
-            .then(response => response.json())
-            .then(data => {
-                console.log('Solicitud de medicamento creada:', data);
-                alert('✅ Solicitud de medicamento creada exitosamente');
-            })
-            .catch((error) => {
-                console.error('Error:', error);
-                alert('❌ Hubo un error durante el proceso');
-            });
+        return fetch('https://backend3-ohrj.onrender.com', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(medicationRequest)
         });
-
-        function obtenerHistoriaMedica() {
-            const patientId = prompt("Ingrese el ID del paciente:");
-            fetch(`https://backend2-m79x.onrender.com/historia-medica/${patientId}`)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.status === "success") {
-                        document.getElementById("historia-medica").innerText = JSON.stringify(data.historia, null, 2);
-                    } else {
-                        document.getElementById("historia-medica").innerText = "No se encontró la historia médica.";
-                    }
-                })
-                .catch(error => {
-                    document.getElementById("historia-medica").innerText = "Error al obtener la historia médica.";
-                    console.error(error);
-                });
-        }
-    </script>
-</body>
-</html>
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Solicitud de medicamento creada:', data);
+        alert('✅ Solicitud de medicamento creada exitosamente');
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+        alert('❌ Hubo un error durante el proceso');
+    });
+});
