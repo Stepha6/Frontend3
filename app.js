@@ -64,7 +64,7 @@ document.getElementById('patientForm').addEventListener('submit', function(event
     };
 
     // Crear paciente y luego registrar la solicitud de medicamento
-    fetch('https://backend3-ohrj.onrender.com', {
+    fetch('https://backend3-ohrj.onrender.com/patient', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
