@@ -122,7 +122,7 @@ document.getElementById('patientForm').addEventListener('submit', function(event
             }
         };
 
-        return fetch('https://backend3-ohrj.onrender.com', {
+        return fetch('https://backend3-ohrj.onrender.com/patient', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
