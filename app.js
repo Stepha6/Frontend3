@@ -75,7 +75,7 @@ document.getElementById('patientForm').addEventListener('submit', function(event
     .then(data => {
         alert('✅ Paciente creado exitosamente');
 
-        const patientId = data.id;
+        const patientId = data._id;
 
         // Crear MedicationRequest usando el ID del paciente
         const medicationRequest = {
