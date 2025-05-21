@@ -130,7 +130,13 @@ document.getElementById('patientForm').addEventListener('submit', function(event
             body: JSON.stringify(medicationRequest)
         });
     })
-    .then(response => response.json())
+    .then(async response => {
+    if (!response.ok) {
+        const text = await response.text();
+        throw new Error(`HTTP ${response.status} - ${text}`);
+    }
+    return response.json();
+})
     .then(data => {
         console.log('Solicitud de medicamento creada:', data);
         alert('✅ Solicitud de medicamento creada exitosamente');
