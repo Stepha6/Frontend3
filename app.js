@@ -122,27 +122,26 @@ document.getElementById('patientForm').addEventListener('submit', function(event
             }
         };
 
-        return fetch('https://backend3-ohrj.onrender.com/medicationRequest', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(medicationRequest)
-        });
-    })
-    .then(async response => {
+        fetch('https://backend3-ohrj.onrender.com/patient', {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(patient)
+})
+.then(async response => {
     if (!response.ok) {
         const text = await response.text();
         throw new Error(`HTTP ${response.status} - ${text}`);
     }
     return response.json();
 })
-    .then(data => {
-        console.log('Solicitud de medicamento creada:', data);
-        alert('✅ Solicitud de medicamento creada exitosamente');
-    })
-    .catch((error) => {
-        console.error('Error:', error);
-        alert('❌ Hubo un error durante el proceso');
-    });
+.then(data => {
+    alert('✅ Paciente creado exitosamente');
+    // Continuar con el siguiente paso
+})
+.catch((error) => {
+    console.error('Error:', error);
+    alert('❌ Hubo un error durante el proceso: ' + error.message);
 });
+
