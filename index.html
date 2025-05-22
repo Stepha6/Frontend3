@@ -168,11 +168,12 @@
                     resourceType: "MedicationRequest",
                     status: "active",
                     intent: "order",
-                    medicationCodeableConcept: {
-                        text: nameMedicine,
+                    medication: {
                         coding: [{
+                            system: "http://example.org/codes",  // opcional: agrega el sistema que uses para codificar
                             display: `${nameMedicine} - ${presentation}`
-                        }]
+                        }],
+                        text: nameMedicine
                     },
                     subject: {
                         reference: `Patient/${patientId}`,
@@ -198,7 +199,7 @@
                             value: parseInt(amount),
                             unit: "Unidades",
                             system: "http://unitsofmeasure.org",
-                            code: "1"  // o la unidad específica (ej: "tablet", "ml", etc.)
+                            code: "1"
                         }
                     },
                     reasonCode: [{
