@@ -193,9 +193,13 @@
                             event: [applicationDate]
                         }
                     }],
-                    quantity: {
-                        value: parseInt(amount),
-                        unit: "Unidades"
+                    dispenseRequest: {
+                        quantity: {
+                            value: parseInt(amount),
+                            unit: "Unidades",
+                            system: "http://unitsofmeasure.org",
+                            code: "1"  // o la unidad específica (ej: "tablet", "ml", etc.)
+                        }
                     },
                     reasonCode: [{
                         text: diagnosis
