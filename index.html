@@ -219,7 +219,13 @@
                     allowedBoolean: false
                   }
                 };
-
+                fetch('https://backend3-ohrj.onrender.com/medicationrequest', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json'
+                  },
+                  body: JSON.stringify(medicationRequest)
+                })
             .then(response => response.json())
             .then(data => {
                 console.log('Solicitud de medicamento creada:', data);
