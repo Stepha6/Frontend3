@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+re<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -237,22 +237,22 @@
             });
         });
 
-        function obtenerHistoriaMedica() {
-            const patientId = prompt("Ingrese el ID del paciente:");
-            fetch(`https://backend3-ohrj.onrender.com/patient/${patientId}`)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.status === "success") {
-                        document.getElementById("historia-medica").innerText = JSON.stringify(data.historia, null, 2);
-                    } else {
-                        document.getElementById("historia-medica").innerText = "No se encontró la historia médica.";
-                    }
-                })
-                .catch(error => {
-                    document.getElementById("historia-medica").innerText = "Error al obtener la historia médica.";
-                    console.error(error);
-                });
-        }
+    function obtenerHistoriaMedica() {
+        const patientId = prompt("Ingrese el ID del paciente:");
+        fetch(`https://backend3-ohrj.onrender.com/patient/${patientId}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === "success") {
+                    document.getElementById("historia-medica").innerText = JSON.stringify(data.historia, null, 2);
+                } else {
+                    document.getElementById("historia-medica").innerText = "No se encontró la historia médica.";
+                }
+            })
+            .catch(error => {
+                document.getElementById("historia-medica").innerText = "Error al obtener la historia médica.";
+                console.error(error);
+            });
+    }
     </script>
 </body>
 </html>
