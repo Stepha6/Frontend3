@@ -153,9 +153,7 @@
             console.log(JSON.stringify(patient));
             fetch('https://backend3-ohrj.onrender.com/patient', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(patient)
             })
             .then(response => response.json())
@@ -164,81 +162,80 @@
 
                 const patientId = data.id;
 
-                // Crear MedicationRequest usando el ID del paciente
-               const medicationRequest = {
-                  resourceType: "MedicationRequest",
-                  status: "active",
-                  intent: "order",
-                  medication: {
-                      concept: {
-                        coding: [{
-                          system: "http://example.org/codes",
-                          code: nameMedicine.replace(/\s+/g, '-').toLowerCase(),
-                          display: `${nameMedicine} - ${presentation}`
-                        }],
-                        text: nameMedicine
-                      }
+                // Crear MedicationRequest
+                const medicationRequest = {
+                    resourceType: "MedicationRequest",
+                    status: "active",
+                    intent: "order",
+                    medication: {
+                        concept: {
+                            coding: [{
+                                system: "http://example.org/codes",
+                                code: nameMedicine.replace(/\s+/g, '-').toLowerCase(),
+                                display: `${nameMedicine} - ${presentation}`
+                            }],
+                            text: nameMedicine
+                        }
                     },
-                  subject: {
-                    reference: `Patient/${patientId}`,
-                  },
-                  requester: {
-                    reference: `Practitioner/${doctorName.replace(/\s+/g, '-')}`,
-                  },
-                  supportingInformation: [{
-                    reference: `Organization/${institution.replace(/\s+/g, '-')}`,
-                  }],
-                  authoredOn: recipeDate,
-                  dosageInstruction: [{
-                    text: dose,
-                    timing: {
-                      event: [applicationDate]
+                    subject: {
+                        reference: `Patient/${patientId}`,
+                    },
+                    requester: {
+                        reference: `Practitioner/${doctorName.replace(/\s+/g, '-')}`,
+                    },
+                    supportingInformation: [{
+                        reference: `Organization/${institution.replace(/\s+/g, '-')}`,
+                    }],
+                    authoredOn: recipeDate,
+                    dosageInstruction: [{
+                        text: dose,
+                        timing: {
+                            event: [applicationDate]
+                        }
+                    }],
+                    dispenseRequest: {
+                        quantity: {
+                            value: parseInt(amount),
+                            unit: "Unidades",
+                            system: "http://unitsofmeasure.org",
+                            code: "1"
+                        }
+                    },
+                    reason: [{
+                        concept: {
+                            coding: [{
+                                system: "http://snomed.info/sct",
+                                code: diagnosis.replace(/\s+/g, '-').toLowerCase(),
+                                display: diagnosis
+                            }],
+                            text: diagnosis
+                        }
+                    }],
+                    note: [{
+                        text: observations || "Sin observaciones adicionales"
+                    }],
+                    substitution: {
+                        allowedBoolean: false
                     }
-                  }],
-                  dispenseRequest: {
-                    quantity: {
-                      value: parseInt(amount),
-                      unit: "Unidades",
-                      system: "http://unitsofmeasure.org",
-                      code: "1"
-                    }
-                  },
-                  reason: [{
-                      concept: {
-                        coding: [{
-                          system: "http://snomed.info/sct",
-                          code: diagnosis.replace(/\s+/g, '-').toLowerCase(),
-                          display: diagnosis
-                        }],
-                        text: diagnosis
-                      }
-                    }
-                  }],
-                  note: [{
-                    text: observations || "Sin observaciones adicionales"
-                  }],
-                  substitution: {
-                    allowedBoolean: false
-                  }
                 };
-                fetch('https://backend3-ohrj.onrender.com/medicationrequest', {
-                  method: 'POST',
-                  headers: {
-                    'Content-Type': 'application/json'
-                  },
-                  body: JSON.stringify(medicationRequest)
-                })
+
+                return fetch('https://backend3-ohrj.onrender.com/medicationrequest', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(medicationRequest)
+                });
+
+            })
             .then(response => response.json())
             .then(data => {
                 console.log('Solicitud de medicamento creada:', data);
                 alert('✅ Solicitud de medicamento creada exitosamente');
-        })
-            .catch((error) => {
+            })
+            .catch(error => {
                 console.error('Error:', error);
                 alert('❌ Hubo un error durante el proceso');
+            });
         });
-    });
-    });
     function obtenerHistoriaMedica() {
         const patientId = prompt("Ingrese el ID del paciente:");
         fetch(`https://backend3-ohrj.onrender.com/patient/${patientId}`)
