@@ -169,13 +169,16 @@
                   resourceType: "MedicationRequest",
                   status: "active",
                   intent: "order",
-                  medicationCodeableConcept: {
-                    coding: [{
-                      system: "http://example.org/codes",
-                      code: nameMedicine.replace(/\s+/g, '-').toLowerCase(), // debes tener un code
-                      display: `${nameMedicine} - ${presentation}`
-                    }],
-                    text: nameMedicine
+                  medication: {
+                      concept: {
+                        coding: [{
+                          system: "http://example.org/codes",
+                          code: nameMedicine.replace(/\s+/g, '-').toLowerCase(),
+                          display: `${nameMedicine} - ${presentation}`
+                        }],
+                        text: nameMedicine
+                      }
+                    },
                   },
                   subject: {
                     reference: `Patient/${patientId}`,
@@ -201,13 +204,16 @@
                       code: "1"
                     }
                   },
-                  reasonCode: [{
-                    coding: [{
-                      system: "http://snomed.info/sct",
-                      code: diagnosis.replace(/\s+/g, '-').toLowerCase(), // simplificado
-                      display: diagnosis
+                  reason: [{
+                      concept: {
+                        coding: [{
+                          system: "http://snomed.info/sct",
+                          code: diagnosis.replace(/\s+/g, '-').toLowerCase(),
+                          display: diagnosis
+                        }],
+                        text: diagnosis
+                      }
                     }],
-                    text: diagnosis
                   }],
                   note: [{
                     text: observations || "Sin observaciones adicionales"
