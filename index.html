@@ -179,15 +179,12 @@
                   },
                   subject: {
                     reference: `Patient/${patientId}`,
-                    display: `${name} ${familyName}`
                   },
                   requester: {
                     reference: `Practitioner/${doctorName.replace(/\s+/g, '-')}`,
-                    display: doctorName
                   },
                   supportingInformation: [{
                     reference: `Organization/${institution.replace(/\s+/g, '-')}`,
-                    display: institution
                   }],
                   authoredOn: recipeDate,
                   dosageInstruction: [{
