@@ -165,63 +165,61 @@
                 const patientId = data.id;
 
                 // Crear MedicationRequest usando el ID del paciente
-                const medicationRequest = {
-                    resourceType: "MedicationRequest",
-                    status: "active",
-                    intent: "order",
-                    medication: {
-                        coding: [{
-                            system: "http://example.org/codes",  // opcional: agrega el sistema que uses para codificar
-                            display: `${nameMedicine} - ${presentation}`
-                        }],
-                        text: nameMedicine
-                    },
-                    subject: {
-                        reference: `Patient/${patientId}`,
-                        display: `${name} ${familyName}`
-                    },
-                    requester: {
-                        reference: `Practitioner/${doctorName.replace(/\s+/g, '-')}`,
-                        display: doctorName
-                    },
-                    supportingInformation: [{
-                        reference: `Organization/${institution.replace(/\s+/g, '-')}`,
-                        display: institution
+               const medicationRequest = {
+                  resourceType: "MedicationRequest",
+                  status: "active",
+                  intent: "order",
+                  medicationCodeableConcept: {
+                    coding: [{
+                      system: "http://example.org/codes",
+                      code: nameMedicine.replace(/\s+/g, '-').toLowerCase(), // debes tener un code
+                      display: `${nameMedicine} - ${presentation}`
                     }],
-                    authoredOn: recipeDate,
-                    dosageInstruction: [{
-                        text: dose,
-                        timing: {
-                            event: [applicationDate]
-                        }
-                    }],
-                    dispenseRequest: {
-                        quantity: {
-                            value: parseInt(amount),
-                            unit: "Unidades",
-                            system: "http://unitsofmeasure.org",
-                            code: "1"
-                        }
-                    },
-                    reasonCode: [{
-                        text: diagnosis
-                    }],
-                    note: [{
-                        text: observations || "Sin observaciones adicionales"
-                    }],
-                    substitution: {
-                        allowedBoolean: false
+                    text: nameMedicine
+                  },
+                  subject: {
+                    reference: `Patient/${patientId}`,
+                    display: `${name} ${familyName}`
+                  },
+                  requester: {
+                    reference: `Practitioner/${doctorName.replace(/\s+/g, '-')}`,
+                    display: doctorName
+                  },
+                  supportingInformation: [{
+                    reference: `Organization/${institution.replace(/\s+/g, '-')}`,
+                    display: institution
+                  }],
+                  authoredOn: recipeDate,
+                  dosageInstruction: [{
+                    text: dose,
+                    timing: {
+                      event: [applicationDate]
                     }
+                  }],
+                  dispenseRequest: {
+                    quantity: {
+                      value: parseInt(amount),
+                      unit: "Unidades",
+                      system: "http://unitsofmeasure.org",
+                      code: "1"
+                    }
+                  },
+                  reasonCode: [{
+                    coding: [{
+                      system: "http://snomed.info/sct",
+                      code: diagnosis.replace(/\s+/g, '-').toLowerCase(), // simplificado
+                      display: diagnosis
+                    }],
+                    text: diagnosis
+                  }],
+                  note: [{
+                    text: observations || "Sin observaciones adicionales"
+                  }],
+                  substitution: {
+                    allowedBoolean: false
+                  }
                 };
 
-                return fetch('https://backend3-ohrj.onrender.com/medicationrequest', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(medicationRequest)
-                });
-            })
             .then(response => response.json())
             .then(data => {
                 console.log('Solicitud de medicamento creada:', data);
