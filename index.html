@@ -150,6 +150,7 @@
             };
 
             // Crear paciente y luego registrar la solicitud de medicamento
+            console.log(JSON.stringify(patient));
             fetch('https://backend3-ohrj.onrender.com/patient', {
                 method: 'POST',
                 headers: {
